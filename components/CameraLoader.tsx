@@ -1,7 +1,8 @@
 import React from 'react'
 import { StyleSheet, Text, View, TouchableOpacity, Alert, ImageBackground } from 'react-native'
-import { Camera } from 'expo-camera'
+import { Camera, CameraCapturedPicture } from 'expo-camera'
 import { StatusBar } from 'expo-status-bar'
+import { getImageIngredients } from '../APIs/logMeals'
 
 let camera: Camera | null
 
@@ -22,13 +23,20 @@ export default function CameraLoader() {
     }
   }
   const __takePicture = async () => {
-    const photo: any = await camera?.takePictureAsync()
+    const photo = await camera?.takePictureAsync()
     console.log(photo)
     setPreviewVisible(true)
     //setStartCamera(false)
     setCapturedImage(photo)
+
+    /**
+     * 
+     *  Compress -> Send to LogMeals -> Send to Spoonacular
+     * 
+     */
   }
   const __savePhoto = () => { }
+
   const __retakePicture = () => {
     setCapturedImage(null)
     setPreviewVisible(false)
