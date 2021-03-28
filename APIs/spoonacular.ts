@@ -16,7 +16,7 @@ export async function getRecipes(ingredients: Array<string>): Promise<Array<any>
   }
 }
 
-type Recipe = {
+export type Recipe = {
   title: string
   image_url: string
 }

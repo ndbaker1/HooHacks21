@@ -3,10 +3,10 @@ import { StyleSheet } from 'react-native';
 import CameraLoader from '../components/CameraLoader';
 import { View } from '../components/Themed';
 
-export default function ScanScreen() {
+export default function ScanScreen({ navigation }: any) {
   return (
     <View style={styles.container}>
-      <CameraLoader />
+      <CameraLoader navigation={navigation} />
     </View>
   )
 }

@@ -20,7 +20,7 @@ const GettingStartedStack = createStackNavigator();
 
 function GettingStartedNavigator() {
   return (
-    <GettingStartedStack.Navigator>
+    <GettingStartedStack.Navigator screenOptions={{ headerShown: false }}>
       <GettingStartedStack.Screen
         name="GettingStarted"
         component={GettingStartedScreen}

@@ -1,14 +1,14 @@
 import React, { useState, useEffect, createRef } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, ImageBackground, Alert, BackHandler, Button } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Alert, BackHandler, Button } from 'react-native';
 import { Camera } from 'expo-camera';
 import { getImageIngredients } from '../APIs/logMeals';
 import { getRecipes } from '../APIs/spoonacular';
+import { ingredients, recipes } from '../APIs/data';
 
-export default function CameraLoader() {
+export default function CameraLoader({ navigation }: any) {
   const cameraRef = createRef<Camera>()
   const getCamera = () => cameraRef.current
 
-  const [currentPhoto, setCurrentPhoto] = useState(null);
   const [hasPermission, setHasPermission] = useState<boolean | null>(null);
   const [cameraActive, setCameraActive] = useState(false);
 
@@ -39,9 +39,14 @@ export default function CameraLoader() {
     const photo = await getCamera()?.takePictureAsync({ base64: true, quality: 0.1 })
     if (photo?.base64)
       getImageIngredients(photo.base64)
-        .then(getRecipes)
-        .then(recipes => {
-          console.log('final recipes:', recipes)
+        .then(ingredientsRes => {
+          getRecipes(ingredientsRes)
+            .then(recipesRes => {
+              setCameraActive(false)
+              recipesRes.forEach(a => recipes.push(a))
+              ingredientsRes.forEach(a => ingredients.push(a))
+              setTimeout(() => navigation.navigate('Recipes'), 500)
+            })
         })
   }
 
@@ -56,12 +61,17 @@ export default function CameraLoader() {
                   takePicture()
                 }}
                 style={{
-                  width: 50,
-                  height: 50,
-                  borderRadius: 25,
+                  width: 60,
+                  height: 60,
+                  borderRadius: 60,
+                  elevation: 10,
                   marginTop: 'auto',
+                  marginBottom: 20,
                   backgroundColor: '#fff',
+                  justifyContent: 'center',
+                  alignItems: 'center'
                 }}>
+                <Text style={{ fontSize: 22 }}>⚡</Text>
               </TouchableOpacity>
             </View>
           </Camera>

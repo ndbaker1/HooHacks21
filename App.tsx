@@ -1,15 +1,6 @@
-import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import {
-  StyleSheet,
-  Text,
-  View,
-  Image,
-  TextInput,
-  Button,
-  TouchableOpacity,
-} from "react-native";
+import { StyleSheet } from "react-native";
 
 import useCachedResources from './hooks/useCachedResources';
 import useColorScheme from './hooks/useColorScheme';
@@ -24,13 +15,8 @@ export default function App() {
   } else {
     return (
       <SafeAreaProvider>
-        {/* <View style={styles.container}>
-          <TouchableOpacity style={styles.getStartedBtn}>
-            <Text style={styles.GetStartedText}>Get Started</Text>
-          </TouchableOpacity>
-        </View> */}
         <Navigation colorScheme={colorScheme} />
-  
+
       </SafeAreaProvider>
     );
   }
