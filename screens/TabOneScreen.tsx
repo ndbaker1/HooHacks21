@@ -8,7 +8,7 @@ export default function TabOneScreen() {
     <View style={styles.container}>
       <CameraLoader />
     </View>
-  );
+  )
 }
 
 const styles = StyleSheet.create({

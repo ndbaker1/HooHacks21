@@ -1,31 +1,12 @@
-import imageCompression from 'browser-image-compression';
-import { logMeals } from './config.json'
+import { flaskEndpoint } from './endpoints'
+type Ingredients = Array<string>
 
-const IdentificationEndpointURL = 'https://api.logmeal.es/v2/recognition/complete'
-
-export function getImageIngredients(image: File, callback: (ingredients: Array<string>) => void) {
-  const options = {
-    maxSizeMB: 1,
-    maxWidthOrHeight: 1920,
-    useWebWorker: true
+export async function getImageIngredients(imageBase64: string): Promise<Ingredients> {
+  const response = await fetch(flaskEndpoint, { method: 'POST', body: imageBase64 })
+  try {
+    const responseText = await response.text()
+    return JSON.parse(responseText).results
+  } catch {
+    return []
   }
-
-  const headers = {
-    'Authorization': 'Bearer ' + logMeals.API_KEY,
-    'Accept': 'application/json',
-    'Content-Type': 'application/json'
-  }
-
-  imageCompression(image, options)
-    .then(compressed => {
-      const reader = new FileReader()
-      reader.onload = function () {
-        fetch(IdentificationEndpointURL, { method: 'POST', headers, body: JSON.stringify({ image: this.result }) })
-          .then(response => {
-            const ingredients: Array<string> = new Array()
-            callback(ingredients)
-          })
-      }
-      reader.readAsBinaryString(compressed)
-    })
 }
