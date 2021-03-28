@@ -6,16 +6,29 @@ export default {
     screens: {
       Root: {
         screens: {
-          TabOne: {
+          Landing: {
             screens: {
-              TabOneScreen: 'one',
+              GettingStarted: {
+                screens: {
+                  GettingStartedScreen: 'start',
+                },
+              },
             },
           },
-          TabTwo: {
+          App: {
             screens: {
-              TabTwoScreen: 'two',
+              TabTwo: {
+                screens: {
+                  TabTwoScreen: 'two',
+                },
+              },
+              TabThree: {
+                screens: {
+                  TabThreeScreen: 'two',
+                },
+              },
             },
-          },
+          }
         },
       },
       NotFound: '*',
