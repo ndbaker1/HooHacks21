@@ -1,217 +1,121 @@
-import React from 'react'
-import { StyleSheet, Text, View, TouchableOpacity, Alert, ImageBackground } from 'react-native'
-import { Camera, CameraCapturedPicture } from 'expo-camera'
-import { StatusBar } from 'expo-status-bar'
-import { getImageIngredients } from '../APIs/logMeals'
-
-let camera: Camera | null
+import React, { useState, useEffect, createRef } from 'react';
+import { StyleSheet, Text, View, TouchableOpacity, ImageBackground, Alert, BackHandler } from 'react-native';
+import { Camera } from 'expo-camera';
+import { getImageIngredients } from '../APIs/logMeals';
+import { getRecipes } from '../APIs/spoonacular';
 
 export default function CameraLoader() {
-  const [startCamera, setStartCamera] = React.useState(false)
-  const [previewVisible, setPreviewVisible] = React.useState(false)
-  const [capturedImage, setCapturedImage] = React.useState<any>(null)
-  const [cameraType, setCameraType] = React.useState(Camera.Constants.Type.back)
-  const [flashMode, setFlashMode] = React.useState('off')
+  const cameraRef = createRef<Camera>()
+  const getCamera = () => cameraRef.current
 
-  const __startCamera = async () => {
-    const { status } = await Camera.requestPermissionsAsync()
-    console.log(status)
-    if (status === 'granted') {
-      setStartCamera(true)
-    } else {
-      Alert.alert('Access denied')
-    }
-  }
-  const __takePicture = async () => {
-    const photo = await camera?.takePictureAsync()
-    console.log(photo)
-    setPreviewVisible(true)
-    //setStartCamera(false)
-    setCapturedImage(photo)
+  const [currentPhoto, setCurrentPhoto] = useState(null);
+  const [hasPermission, setHasPermission] = useState<boolean | null>(null);
+  const [cameraActive, setCameraActive] = useState(false);
 
-    /**
-     * 
-     *  Compress -> Send to LogMeals -> Send to Spoonacular
-     * 
-     */
-  }
-  const __savePhoto = () => { }
+  useEffect(() => {
+    const backAction = () => {
+      if (cameraActive) Alert.alert('Close Camera', 'Are you sure you want to go back?', [
+        { text: 'NO', onPress: () => null, style: 'cancel' },
+        { text: 'YES', onPress: () => setCameraActive(false) },
+      ])
+      else BackHandler.exitApp()
+      return true;
+    };
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', backAction);
+    return () => backHandler.remove();
+  });
 
-  const __retakePicture = () => {
-    setCapturedImage(null)
-    setPreviewVisible(false)
-    __startCamera()
+  useEffect(() => {
+    (async () => {
+      const { status } = await Camera.requestPermissionsAsync();
+      setHasPermission(status === 'granted');
+    })();
+  }, []);
+
+  if (hasPermission === null) return <View />
+  if (hasPermission === false) return <Text>No access to camera</Text>
+
+  async function takePicture() {
+    const photo = await getCamera()?.takePictureAsync({ base64: true, quality: 0.1 })
+    if (photo?.base64)
+      getImageIngredients(photo.base64)
+        .then(getRecipes)
+        .then(recipes => {
+          console.log('final recipes:', recipes)
+        })
+
+    // (ingredients) => getRecipes(ingredients, () => { })
+
   }
-  const __handleFlashMode = () => {
-    if (flashMode === 'on') {
-      setFlashMode('off')
-    } else if (flashMode === 'off') {
-      setFlashMode('on')
-    } else {
-      setFlashMode('auto')
-    }
-  }
-  const __switchCamera = () => {
-    if (cameraType === 'back') {
-      setCameraType('front')
-    } else {
-      setCameraType('back')
-    }
-  }
+
   return (
     <View style={styles.container}>
-      {startCamera ? (
-        <View
-          style={{
-            flex: 1,
-            width: '100%'
-          }}
-        >
-          {previewVisible && capturedImage ? (
-            <CameraPreview photo={capturedImage} savePhoto={__savePhoto} retakePicture={__retakePicture} />
-          ) : (
-            <Camera
-              type={cameraType}
-              flashMode={flashMode}
-              style={{ flex: 1 }}
-              ref={(r) => {
-                camera = r
+      {
+        cameraActive ? (
+          <Camera style={styles.container} type={Camera.Constants.Type.back} ref={cameraRef}>
+            <View style={styles.view}>
+              <TouchableOpacity
+                onPress={() => {
+                  takePicture()
+                }}
+                style={{
+                  width: 50,
+                  height: 50,
+                  borderRadius: 25,
+                  marginTop: 'auto',
+                  backgroundColor: '#fff',
+                }}>
+              </TouchableOpacity>
+            </View>
+          </Camera>
+        ) : (
+          <View style={styles.view} >
+            <CameraPreview photo={currentPhoto} />
+            <TouchableOpacity
+              onPress={() => setCameraActive(true)}
+              style={{
+                width: 130,
+                borderRadius: 4,
+                backgroundColor: '#14274e',
+                flexDirection: 'row',
+                justifyContent: 'center',
+                alignItems: 'center',
+                height: 40
               }}
             >
-              <View
+              <Text
                 style={{
-                  flex: 1,
-                  width: '100%',
-                  backgroundColor: 'transparent',
-                  flexDirection: 'row'
+                  color: '#fff',
+                  fontWeight: 'bold',
+                  textAlign: 'center'
                 }}
               >
-                <View
-                  style={{
-                    position: 'absolute',
-                    left: '5%',
-                    top: '10%',
-                    flexDirection: 'column',
-                    justifyContent: 'space-between'
-                  }}
-                >
-                  <TouchableOpacity
-                    onPress={__handleFlashMode}
-                    style={{
-                      backgroundColor: flashMode === 'off' ? '#000' : '#fff',
-                      height: 25,
-                      width: 25
-                    }}
-                  >
-                    <Text
-                      style={{
-                        fontSize: 20
-                      }}
-                    >
-                      ⚡️
-                    </Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    onPress={__switchCamera}
-                    style={{
-                      marginTop: 20,
-                      height: 25,
-                      width: 25
-                    }}
-                  >
-                    <Text
-                      style={{
-                        fontSize: 20
-                      }}
-                    >
-                      {cameraType === 'front' ? '🤳' : '📷'}
-                    </Text>
-                  </TouchableOpacity>
-                </View>
-                <View
-                  style={{
-                    position: 'absolute',
-                    bottom: 0,
-                    flexDirection: 'row',
-                    flex: 1,
-                    width: '100%',
-                    padding: 20,
-                    justifyContent: 'space-between'
-                  }}
-                >
-                  <View
-                    style={{
-                      alignSelf: 'center',
-                      flex: 1,
-                      alignItems: 'center'
-                    }}
-                  >
-                    <TouchableOpacity
-                      onPress={__takePicture}
-                      style={{
-                        width: 70,
-                        height: 70,
-                        bottom: 0,
-                        borderRadius: 50,
-                        backgroundColor: '#fff'
-                      }}
-                    />
-                  </View>
-                </View>
-              </View>
-            </Camera>
-          )}
-        </View>
-      ) : (
-        <View
-          style={{
-            flex: 1,
-            backgroundColor: '#fff',
-            justifyContent: 'center',
-            alignItems: 'center'
-          }}
-        >
-          <TouchableOpacity
-            onPress={__startCamera}
-            style={{
-              width: 130,
-              borderRadius: 4,
-              backgroundColor: '#14274e',
-              flexDirection: 'row',
-              justifyContent: 'center',
-              alignItems: 'center',
-              height: 40
-            }}
-          >
-            <Text
-              style={{
-                color: '#fff',
-                fontWeight: 'bold',
-                textAlign: 'center'
-              }}
-            >
-              Take picture
+                Take picture
             </Text>
-          </TouchableOpacity>
-        </View>
-      )}
-
-      <StatusBar style="auto" />
+            </TouchableOpacity>
+          </View>
+        )
+      }
     </View>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center'
+    alignContent: 'center',
+    justifyContent: 'center',
+    width: '100%',
+    height: '100%'
+  },
+  view: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
   }
 })
 
 const CameraPreview = ({ photo, retakePicture, savePhoto }: any) => {
-  console.log('sdsfds', photo)
   return (
     <View
       style={{
