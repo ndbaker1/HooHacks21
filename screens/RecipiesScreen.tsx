@@ -1,17 +1,14 @@
 import * as React from 'react';
-import { 
-  StyleSheet, 
-  Button, 
-  Alert, 
-  ScrollView, 
-  StatusBar, 
-  Image, 
-  TouchableOpacity, 
-  ImageBackground, 
-  Linking 
+import {
+  StyleSheet,
+  Button,
+  Alert,
+  ScrollView,
+  TouchableOpacity,
+  ImageBackground,
+  Linking
 } from 'react-native';
 
-import EditScreenInfo from '../components/EditScreenInfo';
 import { Text, View } from '../components/Themed';
 import BoxComponent from '../components/BoxComponent';
 
@@ -19,7 +16,7 @@ const Separator = () => (
   <View style={styles.separator} />
 );
 
-export default function TabTwoScreen() {
+export default function RecipiesScreen() {
 
 
   return (
@@ -54,27 +51,27 @@ export default function TabTwoScreen() {
         <Text style={styles.title}>
           Recipes
         </Text>
-        <TouchableOpacity onPress={ ()=>{ Linking.openURL('https://cooking.nytimes.com/recipes/8663-spaghetti-with-fresh-tomato-and-basil-sauce')}}>
+        <TouchableOpacity onPress={() => { Linking.openURL('https://cooking.nytimes.com/recipes/8663-spaghetti-with-fresh-tomato-and-basil-sauce') }}>
           <ImageBackground source={require('../images/Tomato-Pasta.png')} style={styles.imageContainer} imageStyle={{ borderRadius: 15 }}>
             <View style={styles.overlay} />
-            <Text style = {{position: 'absolute', marginTop: 87, marginLeft: 15, fontSize: 16}}>Lauren's massive brain</Text>
-            <Text style = {{position: 'absolute', marginTop: 111, marginLeft: 18, fontSize: 12}}>Prep Time: 40 minutes</Text>
+            <Text style={{ position: 'absolute', marginTop: 87, marginLeft: 15, fontSize: 16 }}>Lauren's massive brain</Text>
+            <Text style={{ position: 'absolute', marginTop: 111, marginLeft: 18, fontSize: 12 }}>Prep Time: 40 minutes</Text>
           </ImageBackground>
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={ ()=>{ Linking.openURL('https://www.epicurious.com/recipes/food/views/pasta-with-15-minute-burst-cherry-tomato-sauce-56390060')}}>
+        <TouchableOpacity onPress={() => { Linking.openURL('https://www.epicurious.com/recipes/food/views/pasta-with-15-minute-burst-cherry-tomato-sauce-56390060') }}>
           <ImageBackground source={require('../images/more-pasta.png')} style={styles.imageContainer} imageStyle={{ borderRadius: 15 }}>
             <View style={styles.overlay} />
-            <Text style = {{position: 'absolute', marginTop: 87, marginLeft: 15, fontSize: 16}}>Kendra big brained</Text>
-            <Text style = {{position: 'absolute', marginTop: 111, marginLeft: 18, fontSize: 12}}>Prep Time: 40 minutes</Text>
-          </ImageBackground>          
+            <Text style={{ position: 'absolute', marginTop: 87, marginLeft: 15, fontSize: 16 }}>Kendra big brained</Text>
+            <Text style={{ position: 'absolute', marginTop: 111, marginLeft: 18, fontSize: 12 }}>Prep Time: 40 minutes</Text>
+          </ImageBackground>
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={ ()=>{ Linking.openURL('https://www.google.com/imgres?imgurl=https%3A%2F%2Fflockler.com%2Fthumbs%2Fsites%2F192%2Fclassic_tomato_spaghetti_21645_s600x600_c854x499_l0x420.png&imgrefurl=https%3A%2F%2Fthehappyfoodie.co.uk%2Frecipes%2Fclassic-tomato-spaghetti&tbnid=gLXoY69MbwCpmM&vet=12ahUKEwjbo7_ZgtLvAhWXbqwKHfgJDSYQMygBegUIARDnAQ..i&docid=1z1qPEsNiHF_fM&w=600&h=600&q=tomato%20pasta%20spaghetti&safe=strict&ved=2ahUKEwjbo7_ZgtLvAhWXbqwKHfgJDSYQMygBegUIARDnAQ')}}>
+        <TouchableOpacity onPress={() => { Linking.openURL('https://www.google.com/imgres?imgurl=https%3A%2F%2Fflockler.com%2Fthumbs%2Fsites%2F192%2Fclassic_tomato_spaghetti_21645_s600x600_c854x499_l0x420.png&imgrefurl=https%3A%2F%2Fthehappyfoodie.co.uk%2Frecipes%2Fclassic-tomato-spaghetti&tbnid=gLXoY69MbwCpmM&vet=12ahUKEwjbo7_ZgtLvAhWXbqwKHfgJDSYQMygBegUIARDnAQ..i&docid=1z1qPEsNiHF_fM&w=600&h=600&q=tomato%20pasta%20spaghetti&safe=strict&ved=2ahUKEwjbo7_ZgtLvAhWXbqwKHfgJDSYQMygBegUIARDnAQ') }}>
           <ImageBackground source={require('../images/more-pasta.png')} style={styles.imageContainer} imageStyle={{ borderRadius: 15 }}>
             <View style={styles.overlay} />
-            <Text style = {{position: 'absolute', marginTop: 87, marginLeft: 15, fontSize: 16}}>nick&raghav's sauteed snails</Text>
-            <Text style = {{position: 'absolute', marginTop: 111, marginLeft: 18, fontSize: 12}}>Prep Time: 40 minutes</Text>
+            <Text style={{ position: 'absolute', marginTop: 87, marginLeft: 15, fontSize: 16 }}>nick&raghav's sauteed snails</Text>
+            <Text style={{ position: 'absolute', marginTop: 111, marginLeft: 18, fontSize: 12 }}>Prep Time: 40 minutes</Text>
           </ImageBackground>
         </TouchableOpacity>
       </ScrollView>

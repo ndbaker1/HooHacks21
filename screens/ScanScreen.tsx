@@ -3,7 +3,7 @@ import { StyleSheet } from 'react-native';
 import CameraLoader from '../components/CameraLoader';
 import { View } from '../components/Themed';
 
-export default function TabOneScreen() {
+export default function ScanScreen() {
   return (
     <View style={styles.container}>
       <CameraLoader />

@@ -1,6 +1,5 @@
 import * as React from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, Button } from 'react-native';
-import CameraLoader from '../components/CameraLoader';
+import { StyleSheet, View, Button } from 'react-native';
 
 export default function GettingStartedScreen({ navigation }: any) {
   return (

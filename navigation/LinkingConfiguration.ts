@@ -10,21 +10,26 @@ export default {
             screens: {
               GettingStarted: {
                 screens: {
-                  GettingStartedScreen: 'start',
+                  GettingStartedScreen: 'GettingStarted',
                 },
               },
             },
           },
           App: {
             screens: {
-              TabTwo: {
+              Home: {
                 screens: {
-                  TabTwoScreen: 'two',
+                  HomeScreen: 'Home',
                 },
               },
-              TabThree: {
+              Scan: {
                 screens: {
-                  TabThreeScreen: 'two',
+                  ScanScreen: 'Scan',
+                },
+              },
+              Recipes: {
+                screens: {
+                  RecipesScreen: 'Recipes',
                 },
               },
             },
