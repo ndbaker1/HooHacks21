@@ -6,6 +6,7 @@ import { getImageIngredients } from '../APIs/logMeals'
 
 let camera: Camera | null
 
+<<<<<<< Updated upstream
 export default function CameraLoader() {
   const [startCamera, setStartCamera] = React.useState(false)
   const [previewVisible, setPreviewVisible] = React.useState(false)
@@ -34,6 +35,26 @@ export default function CameraLoader() {
      *  Compress -> Send to LogMeals -> Send to Spoonacular
      * 
      */
+=======
+  useEffect(() => {
+    (async () => {
+      const { status } = await Camera.requestPermissionsAsync();
+      setHasPermission(status === 'granted');
+    })();
+  }, []);
+
+  if (hasPermission === null) return <View />
+  if (hasPermission === false) return <Text>No access to camera</Text>
+
+  async function takePicture() {
+    const photo = await getCamera()?.takePictureAsync({ base64: true, quality: 0.1 })
+    if (photo?.base64)
+      getImageIngredients(photo.base64)
+        .then(getRecipes)
+        .then(recipes => {
+          console.log('final recipes:', recipes)
+        })
+>>>>>>> Stashed changes
   }
   const __savePhoto = () => { }
 
